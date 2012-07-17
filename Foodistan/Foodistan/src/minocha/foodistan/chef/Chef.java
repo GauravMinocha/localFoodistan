@@ -1,15 +1,16 @@
 package minocha.foodistan.chef;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import minocha.foodistan.item.Item;
 
-public interface Chef {
+public class Chef {
 	
-	public Item chefCookItem();
+	private boolean isBusy;
+	private Map<String, Long> chefItemTime = new HashMap<String, Long>();
+	private Map<String, Long> chefItemDefTime = new HashMap<String, Long>();
 	
-	public void chefSpeedUp();
-	
-	public boolean chefBusy();
-	
-	public void chefSpeedDown();
 	
 }

@@ -1,44 +1,28 @@
 package minocha.foodistan.order;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Order {
 
 	private int orderId;
-	private String orderItem;
-	private int orderQuantity;
-	private int orderStatus;	
-    private int orderDiscount;
-    //private enum statusType = {"RELEASED, HOLD, COMPLETE"};
+	private Map<String, Integer> orderItemQuantity = new HashMap<String, Integer>();
+	private int orderDiscount;
+    public enum status {RELEASED, HOLD, COMPLETE};
+    private status orderStatus;  
+    private int orderBill;
 	public int getOrderId() {
 		return orderId;
 	}
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
-	public String getOrderItem() {
-		return orderItem;
+	public Map<String, Integer> getOrderItemQuantity() {
+		return orderItemQuantity;
 	}
-	public void setOrderItem(String orderItem) {
-		this.orderItem = orderItem;
-	}
-	public int getOrderQuantity() {
-		return orderQuantity;
-	}
-
-	public Order(String orderItem, int orderQuantity, int orderDiscount) {
-		super();
-		this.orderItem = orderItem;
-		this.orderQuantity = orderQuantity;
-		this.orderDiscount = orderDiscount;
-		this.orderStatus = 0;
-	}
-	public void setOrderQuantity(int orderQuantity) {
-		this.orderQuantity = orderQuantity;
-	}
-	public int getOrderStatus() {
-		return orderStatus;
-	}
-	public void setOrderStatus(int orderStatus) {
-		this.orderStatus = orderStatus;
+	public void setOrderItemQuantity(Map<String, Integer> orderItemQuantity) {
+		this.orderItemQuantity = orderItemQuantity;
 	}
 	public int getOrderDiscount() {
 		return orderDiscount;
@@ -46,6 +30,17 @@ public class Order {
 	public void setOrderDiscount(int orderDiscount) {
 		this.orderDiscount = orderDiscount;
 	}
-
+	public status getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(status orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	public int getOrderBill() {
+		return orderBill;
+	}
+	public void setOrderBill(int orderBill) {
+		this.orderBill = orderBill;
+	}
     
 }
