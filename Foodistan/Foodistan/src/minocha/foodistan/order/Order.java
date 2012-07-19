@@ -6,12 +6,15 @@ import java.util.Map;
 
 public class Order {
 
-	private int orderId;
+	private static int orderId;
 	private Map<String, Integer> orderItemQuantity = new HashMap<String, Integer>();
 	private int orderDiscount;
     public enum status {RELEASED, HOLD, COMPLETE};
     private status orderStatus;  
     private int orderBill;
+    
+    
+    
 	public int getOrderId() {
 		return orderId;
 	}

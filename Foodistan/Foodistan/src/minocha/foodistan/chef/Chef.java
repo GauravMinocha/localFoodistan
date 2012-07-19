@@ -10,7 +10,7 @@ public class Chef {
 	
 	private boolean isBusy;
 	private Map<String, Long> chefItemTime = new HashMap<String, Long>();
-	private Map<String, Long> chefItemDefTime = new HashMap<String, Long>();
+	private Map<String, Long> chefItemDefaultTime = new HashMap<String, Long>();
 	
 	
 }

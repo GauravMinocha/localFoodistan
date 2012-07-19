@@ -1,39 +1,81 @@
 package minocha.foodistan.item;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import minocha.foodistan.salesCounter.SalesCounter.status;
+
 public class Item {
 	
-	  private long itemLife;
-	  private long itemTime = 0;
-	  private String itemType;
-
+	  private long itemLifeTime;
+	  private long itemStartTime = 0;
+	  public  enum status {FRESH, STALE};
+	  private status itemStatus;  
+	  private ItemType itemType;
+	  public static Map<String, Long> itemLifeTimeMap = new HashMap<String, Long>();
+	
+	  
 	  public boolean isUsable(){
-		   if (this.itemTime < itemLife)
+		   if ((System.currentTimeMillis()-this.getItemStartTime())>this.getItemLifeTime())
 		    	return true;
 		    		return false;
 		   }
 
-	public long getItemLife() {
-		return itemLife;
+
+	public Item(ItemType itemType) {
+		super();
+		this.itemLifeTime = itemType.getLifeTime();
+		this.itemStartTime = System.currentTimeMillis();
+		this.itemStatus = status.FRESH;
+		this.itemType = itemType;
 	}
 
-	public void setItemLife(long itemLife) {
-		this.itemLife = itemLife;
+
+	public long getItemLifeTime() {
+		return itemLifeTime;
 	}
 
-	public long getItemTime() {
-		return itemTime;
+
+	public void setItemLifeTime(long itemLifeTime) {
+		this.itemLifeTime = itemLifeTime;
 	}
 
-	public void setItemTime(long itemTime) {
-		this.itemTime = itemTime;
+
+	public long getItemStartTime() {
+		return itemStartTime;
 	}
 
-	public String getItemType() {
+	public void setItemStartTime(long itemStartTime) {
+		this.itemStartTime = itemStartTime;
+	}
+
+	public status getItemStatus() {
+		return itemStatus;
+	}
+
+	public void setItemStatus(status itemStatus) {
+		this.itemStatus = itemStatus;
+	}
+
+
+	public ItemType getItemType() {
 		return itemType;
 	}
 
-	public void setItemType(String itemType) {
+
+	public void setItemType(ItemType itemType) {
 		this.itemType = itemType;
 	}
+
+
+	public static Map<String, Long> getItemLifeTimeMap() {
+		return itemLifeTimeMap;
+	}
+
+
+	public static void setItemLifeTimeMap(Map<String, Long> itemLifeTimeMap) {
+		Item.itemLifeTimeMap = itemLifeTimeMap;
+	}
+
 
 }

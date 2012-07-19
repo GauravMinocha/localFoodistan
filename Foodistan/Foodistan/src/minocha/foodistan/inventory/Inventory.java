@@ -1,44 +1,53 @@
 package minocha.foodistan.inventory;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Queue;
 
 import minocha.foodistan.item.*;
+import minocha.foodistan.item.Item.status;
 
 public class Inventory {
 
 	private String inventoryItem;
+	// not used currently 
 	private int inventoryMin;
 	private int inventoryMax;
-	public List<Item> items;
+	// 
+   public Queue<Item> items = new LinkedList<Item>();
+	
 		
-   public List<Item> addItem(Item itm)
+   public int countItem()
+   {
+	   return this.items.size();
+    }
+   
+	public Queue<Item> addItem(Item itm)
    {
 	  this.items.add(itm);
 	  return items;
-	  
    }
    
    public Item removeItem()
    {
-	return null;
-	   //this.items.remove(arg0)
-  }
+	  Item itm = this.items.poll();
+	  if(!(itm.isUsable()))
+	  {
+		 itm.setItemStatus(status.STALE);
+	  }
+	  return itm;
+	  //this.items.remove(arg0)
+   }
       
 	public String getInventoryItem() {
 	return inventoryItem;
     }
 
-public void setInventoryItem(String inventoryItem) {
+    public void setInventoryItem(String inventoryItem) {
 	this.inventoryItem = inventoryItem;
-}
-
-public List<Item> getItems() {
-	return items;
-}
-
-public void setItems(List<Item> items) {
-	this.items = items;
-}
+    }
 
 	public int getInventoryMin() {
 		return inventoryMin;
@@ -52,7 +61,5 @@ public void setItems(List<Item> items) {
 	public void setInventoryMax(int inventoryMax) {
 		this.inventoryMax = inventoryMax;
 	}
-	
-	
 	
 }

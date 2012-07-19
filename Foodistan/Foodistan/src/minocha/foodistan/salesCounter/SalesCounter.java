@@ -8,6 +8,8 @@ public class SalesCounter {
 	private List<String> counterItems;
     public enum status {BUSY, FREE}
     private status counterStatus;
+    
+    
 	
     public int getCounterNo() {
 		return counterNo;
