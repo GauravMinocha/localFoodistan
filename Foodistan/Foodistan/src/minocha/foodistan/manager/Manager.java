@@ -6,11 +6,11 @@ import minocha.foodistan.order.*;
 
 public interface Manager {
 	
-	public Item executeOrder(Order order);
+	public Item processOrder(Order order);
     
-    public int calculateDiscount(Order order);
+    public int calculateDiscount();
     
-    public int refillInventory(Inventory inventory);
+    public int refillInventory(Item item);
        
 	
 }

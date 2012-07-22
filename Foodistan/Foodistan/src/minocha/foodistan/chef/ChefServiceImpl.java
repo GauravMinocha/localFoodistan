@@ -7,12 +7,17 @@ import minocha.foodistan.item.ItemType;
 public class ChefServiceImpl implements ChefService {
 
 	@Override
-	public Item cookItem(Chef cf, ItemType itmType, int quantity) {
-		
-		// TODO Auto-generated method stub
+	public Item cookItem(Chef cf, ItemType itmType) {
+	
+	  	    try {
+			Thread.sleep(cf.getCurrentCookTime());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// TOD Auto-generated method stub
 		Item itm = new Item(itmType);
 	    itm.setItemStatus(status.FRESH);
-	    			
-		return null;
+	    return itm;
 	}
 }

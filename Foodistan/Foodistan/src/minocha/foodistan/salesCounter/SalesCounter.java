@@ -1,33 +1,44 @@
 package minocha.foodistan.salesCounter;
 
 import java.util.List;
+import java.util.Map;
+
+
+import minocha.foodistan.item.Item;
+import minocha.foodistan.manager.Foodistan;
+import minocha.foodistan.order.Order;
 
 public class SalesCounter {
 	
-	private int counterNo;
-	private List<String> counterItems;
+	private int sCounterNo;
     public enum status {BUSY, FREE}
-    private status counterStatus;
+    private status sCounterStatus;
     
     
-	
+    public Item recordOrder(SalesCounter sc, Map<String, Integer> itemTypeQuantity, int orderDiscount){
+		
+    	Order order = null;
+		return Foodistan.getfoodistan().getMg().processOrder(order);
+    
+    	}
+    
     public int getCounterNo() {
-		return counterNo;
+		return sCounterNo;
 	}
 	public void setCounterNo(int counterNo) {
-		this.counterNo = counterNo;
+		this.sCounterNo = counterNo;
 	}
-	public List<String> getCounterItems() {
-		return counterItems;
-	}
-	public void setCounterItems(List<String> counterItems) {
-		this.counterItems = counterItems;
+
+	public SalesCounter(int sCounterNo) {
+		super();
+		this.sCounterNo = sCounterNo;
+		this.sCounterStatus = status.FREE;
 	}
 	public status getCounterStatus() {
-		return counterStatus;
+		return sCounterStatus;
 	}
-	public void setCounterStatus(status counterStatus) {
-		this.counterStatus = counterStatus;
+	public void setsCounterStatus(status sCounterStatus) {
+		this.sCounterStatus = sCounterStatus;
 	}
     
     

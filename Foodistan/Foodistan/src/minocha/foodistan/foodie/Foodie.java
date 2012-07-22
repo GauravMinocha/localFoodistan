@@ -1,29 +1,28 @@
 package minocha.foodistan.foodie;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import minocha.foodistan.item.Item;
+import minocha.foodistan.item.ItemType;
+import minocha.foodistan.manager.Foodistan;
+import minocha.foodistan.salesCounter.SalesCounter;
 
 public class Foodie {
 
-	private int foodieEatTime;
-
-	private List<String> foodieItem;
 	private int foodieDiscount;
-	public enum Status {FREE, BUSY, HOLD} 
+	public enum Status {FREE, EATING, WAITING} 
 	private Status foodieStatus;
+	private Map<ItemType, Long> foodieItemEatTime = new HashMap<ItemType, Long>();
 	
-	public int getFoodieEatTime() {
-		return foodieEatTime;
+	public Item requestOrder(SalesCounter sc, Map<String, Integer> itemTypeQuantity, int foodieDiscount){
+		sc.recordOrder(sc, itemTypeQuantity, foodieDiscount);
+	    return null;
 	}
-	public void setFoodieEatTime(int foodieEatTime) {
-		this.foodieEatTime = foodieEatTime;
-	}
-	public List<String> getFoodieItem() {
-		return foodieItem;
-	}
-	public void setFoodieItem(List<String> foodieItem) {
-		this.foodieItem = foodieItem;
-	}
+	
 	public int getFoodieDiscount() {
+		foodieItemEatTime.put(ItemType.BURGER,1234L);
 		return foodieDiscount;
 	}
 	public void setFoodieDiscount(int foodieDiscount) {
@@ -35,6 +34,12 @@ public class Foodie {
 	public void setFoodieStatus(Status foodieStatus) {
 		this.foodieStatus = foodieStatus;
 	}
+
+	public void consumeItem(Item item) {
+		
+	}
+
+
 	
 	
 }

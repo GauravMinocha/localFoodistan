@@ -11,7 +11,7 @@ import minocha.foodistan.item.Item.status;
 
 public class Inventory {
 
-	private String inventoryItem;
+	private ItemType itmType;
 	// not used currently 
 	private int inventoryMin;
 	private int inventoryMax;
@@ -24,10 +24,10 @@ public class Inventory {
 	   return this.items.size();
     }
    
-	public Queue<Item> addItem(Item itm)
+	public void addItem(Item itm)
    {
 	  this.items.add(itm);
-	  return items;
+	 
    }
    
    public Item removeItem()
@@ -41,13 +41,15 @@ public class Inventory {
 	  //this.items.remove(arg0)
    }
       
-	public String getInventoryItem() {
-	return inventoryItem;
-    }
 
-    public void setInventoryItem(String inventoryItem) {
-	this.inventoryItem = inventoryItem;
-    }
+
+	public ItemType getItmType() {
+	return itmType;
+}
+
+public void setItmType(ItemType itmType) {
+	this.itmType = itmType;
+}
 
 	public int getInventoryMin() {
 		return inventoryMin;
