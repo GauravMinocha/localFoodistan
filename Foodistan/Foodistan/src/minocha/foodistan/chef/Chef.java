@@ -6,6 +6,7 @@ import java.util.Map;
 
 import minocha.foodistan.item.Item;
 import minocha.foodistan.item.ItemType;
+import minocha.foodistan.item.Item.status;
 
 public class Chef {
 	
@@ -16,6 +17,20 @@ public class Chef {
 	private ItemType chefItemType;
 	private long currentCookTime;
 	private long defaultCookTime;
+	
+	public Item cookItem(ItemType itmType) {
+		
+  	    try {
+		Thread.sleep(this.getCurrentCookTime());
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	// TOD Auto-generated method stub
+	Item itm = new Item(itmType);
+    itm.setItemStatus(status.FRESH);
+    return itm;
+   }
 	
 	public boolean isBusy() {
 		return isBusy;

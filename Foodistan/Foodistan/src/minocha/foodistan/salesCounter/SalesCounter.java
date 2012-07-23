@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 import minocha.foodistan.item.Item;
+import minocha.foodistan.item.ItemType;
 import minocha.foodistan.manager.Foodistan;
 import minocha.foodistan.order.Order;
 
@@ -15,7 +16,7 @@ public class SalesCounter {
     private status sCounterStatus;
     
     
-    public Item recordOrder(SalesCounter sc, Map<String, Integer> itemTypeQuantity, int orderDiscount){
+    public Item recordOrder(SalesCounter sc, ItemType itemType, int Quantity, int orderDiscount){
 		
     	Order order = null;
 		return Foodistan.getfoodistan().getMg().processOrder(order);

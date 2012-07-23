@@ -3,7 +3,7 @@ package minocha.foodistan.chef;
 import minocha.foodistan.item.Item;
 import minocha.foodistan.item.Item.status;
 import minocha.foodistan.item.ItemType;
-
+// useless for now 
 public class ChefServiceImpl implements ChefService {
 
 	@Override
