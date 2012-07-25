@@ -9,18 +9,21 @@ import minocha.foodistan.item.ItemType;
 import minocha.foodistan.item.Item.status;
 
 public class Chef {
-	
-	private boolean isBusy;
+		
 	//private Map<ItemType, Long> chefItemTime = new HashMap<ItemType, Long>();
 	//private Map<ItemType, Long> chefItemDefaultTime = new HashMap<ItemType, Long>();
 	
+	public enum chefStatus {FREE, BUSY} 
+	private chefStatus cStatus;
 	private ItemType chefItemType;
 	private long currentCookTime;
 	private long defaultCookTime;
 	
 	public Item cookItem(ItemType itmType) {
-		
-  	    try {
+	
+	if(this.getChefItemType() == itmType){
+	 this.cStatus = chefStatus.BUSY;
+		try {
 		Thread.sleep(this.getCurrentCookTime());
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
@@ -30,14 +33,26 @@ public class Chef {
 	Item itm = new Item(itmType);
     itm.setItemStatus(status.FRESH);
     return itm;
-   }
+   	}
+	else 
+	return null;
+    }
 	
-	public boolean isBusy() {
-		return isBusy;
+	public chefStatus getcStatus() {
+		return cStatus;
 	}
-	public void setBusy(boolean isBusy) {
-		this.isBusy = isBusy;
+
+	public void setcStatus(chefStatus cStatus) {
+		this.cStatus = cStatus;
 	}
+
+	public Chef(ItemType chefItemType, long defaultCookTime) {
+		super();
+		this.chefItemType = chefItemType;
+		this.defaultCookTime = defaultCookTime;
+	}
+
+
 	public ItemType getChefItemType() {
 		return chefItemType;
 	}

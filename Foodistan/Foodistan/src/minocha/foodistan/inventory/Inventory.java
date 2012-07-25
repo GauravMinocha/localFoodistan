@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import minocha.foodistan.item.*;
 import minocha.foodistan.item.Item.status;
+import minocha.foodistan.manager.Foodistan;
 
 public class Inventory {
 
@@ -17,39 +18,48 @@ public class Inventory {
 	private int inventoryMax;
 	// 
    public Queue<Item> items = new LinkedList<Item>();
-	
+
+   private boolean removeStale() {
+	// TODO Auto-generated method stub
+		 Foodistan fdistan = Foodistan.getfoodistan(); 
+		 boolean b = false;
 		
+		 Item itm = this.items.peek();
+		  while(!itm.isUsable()){
+			  this.items.poll();
+			  itm.setItemStatus(status.STALE);
+			  fdistan.setBurgersWasted(fdistan.getBurgersWasted()+1);
+			  itm = this.items.peek();
+		      b = true;
+		  }
+			  return b;
+   }
    public int countItem()
-   {
-	   return this.items.size();
+   {  
+	   	removeStale();
+	   	return this.items.size();
     }
    
 	public void addItem(Item itm)
    {
-	  this.items.add(itm);
-	 
+		removeStale();	  
+		this.items.add(itm);
    }
    
    public Item removeItem()
    {
-	  Item itm = this.items.poll();
-	  if(!(itm.isUsable()))
-	  {
-		 itm.setItemStatus(status.STALE);
-	  }
-	  return itm;
+	   removeStale();
+	   return this.items.poll();
 	  //this.items.remove(arg0)
    }
-      
+  
+    public ItemType getItmType() {
+    	return itmType;
+   }
 
-
-	public ItemType getItmType() {
-	return itmType;
-}
-
-public void setItmType(ItemType itmType) {
-	this.itmType = itmType;
-}
+   public void setItmType(ItemType itmType) {
+	   this.itmType = itmType;
+   }
 
 	public int getInventoryMin() {
 		return inventoryMin;

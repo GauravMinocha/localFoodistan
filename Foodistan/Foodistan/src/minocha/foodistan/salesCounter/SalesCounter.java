@@ -14,11 +14,17 @@ public class SalesCounter {
 	private int sCounterNo;
     public enum status {BUSY, FREE}
     private status sCounterStatus;
+   
+	public SalesCounter(int sCounterNo) {
+		super();
+		this.sCounterNo = sCounterNo;
+		this.sCounterStatus = status.FREE;
+	}
     
-    
-    public Item recordOrder(SalesCounter sc, ItemType itemType, int Quantity, int orderDiscount){
+    public Item recordOrder(ItemType itemType, int quantity, int orderDiscount){
 		
-    	Order order = null;
+    	Order order = new Order(itemType, orderDiscount, orderDiscount);
+    	Foodistan.getfoodistan().setOrdersRecieved(Foodistan.getfoodistan().getOrdersRecieved()+1);
 		return Foodistan.getfoodistan().getMg().processOrder(order);
     
     	}
@@ -29,19 +35,12 @@ public class SalesCounter {
 	public void setCounterNo(int counterNo) {
 		this.sCounterNo = counterNo;
 	}
-
-	public SalesCounter(int sCounterNo) {
-		super();
-		this.sCounterNo = sCounterNo;
-		this.sCounterStatus = status.FREE;
-	}
 	public status getCounterStatus() {
 		return sCounterStatus;
 	}
 	public void setsCounterStatus(status sCounterStatus) {
 		this.sCounterStatus = sCounterStatus;
 	}
-    
-    
+   
 	
 }

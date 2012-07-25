@@ -8,19 +8,20 @@ import minocha.foodistan.item.ItemType;
 
 public class Order {
 
-	private static int ordrId;
+	//private static int ordrId;
 	//private Map<ItemType, Integer> orderItemTypeQuantity = new HashMap<ItemType, Integer>();
 	private ItemType ordrItmTyp;
 	private int ordrQuantity;
 	private int ordrDiscount;
     public enum status {RELEASED, HOLD, COMPLETE};
     private status ordrStatus;  
-    private int ordrBill;
-	public static int getOrdrId() {
-		return ordrId;
-	}
-	public static void setOrdrId(int ordrId) {
-		Order.ordrId = ordrId;
+    
+	public Order(ItemType ordrItmTyp, int ordrQuantity, int ordrDiscount) {
+		super();
+		this.ordrItmTyp = ordrItmTyp;
+		this.ordrQuantity = ordrQuantity;
+		this.ordrDiscount = ordrDiscount;
+		this.setOrdrStatus(status.RELEASED);
 	}
 	public ItemType getOrdrItmTyp() {
 		return ordrItmTyp;
@@ -45,12 +46,6 @@ public class Order {
 	}
 	public void setOrdrStatus(status ordrStatus) {
 		this.ordrStatus = ordrStatus;
-	}
-	public int getOrdrBill() {
-		return ordrBill;
-	}
-	public void setOrdrBill(int ordrBill) {
-		this.ordrBill = ordrBill;
 	}
     
  

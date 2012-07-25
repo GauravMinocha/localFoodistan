@@ -12,26 +12,44 @@ public class ManagerImpl implements Manager {
     
 	@Override
 	public Item processOrder(Order order) {
-		
-		if (this.calculateDiscount() < order.getOrdrDiscount()||this.ifInventory(order.getOrdrItmTyp(), order.getOrdrQuantity())==false){
+		if (this.hasInventory(Foodistan.getfoodistan().getInvBurgr(), order.getOrdrQuantity())==false)
+				{ Foodistan.getfoodistan().setBurgerNeeded(Foodistan.getfoodistan().getBurgerNeeded()+1);
+							}
+		if (this.calculateDiscount() < order.getOrdrDiscount()||this.hasInventory(Foodistan.getfoodistan().getInvBurgr(), order.getOrdrQuantity())==false){
 			order.setOrdrStatus(status.HOLD);
 			Foodistan.getfoodistan().odrsOnHold.add(order);
             return null;
             }
         else
-        	return this.getItem(order.getOrdrItmTyp(), order.getOrdrQuantity());
-          }
+        	Foodistan.getfoodistan().setOrdersDelivered(Foodistan.getfoodistan().getOrdersDelivered()+1);
+        	return getItem(Foodistan.getfoodistan().getInvBurgr(), order.getOrdrQuantity());
+       	    }
 
-	public boolean ifInventory(ItemType it, int quantity){
+	public boolean hasInventory(Inventory invtry, int quantity){
+		 if(invtry.countItem()>quantity)
+		return true;
+		 else
 		return false;
+		// review code below
+		/*Iterator<Inventory> itr = Foodistan.getfoodistan().getInvList().iterator();
+		while(!(itr.next().getItmType() == it))
+		{   itr.next();
+				}
+		if (itr.next().countItem()> quantity){
+		return true;
+		}
+		return false;
+		*/
+		}
+	
+	public Item getItem(Inventory invtry, int quantity){
+         return invtry.removeItem();
 	}
 	
-	public Item getItem(ItemType it, int quantity){
-         return null;
-	}
-	
-	public boolean addItem(Item item){
-		item.getItemType();
+	public void addItem(Inventory invtry, Item item){
+		invtry.addItem(item);
+		
+		/*item.getItemType();
 		Iterator<Inventory> itr = Foodistan.getfoodistan().getInvList().iterator();
 	
 		while(!(itr.next().getItmType() == item.getItemType()))
@@ -42,15 +60,23 @@ public class ManagerImpl implements Manager {
 		itr.next().addItem(item);
 		//Foodistan.getfoodistan().invList.get(index)
 		return true;
+	  */
 	}
 	@Override
 	public int calculateDiscount() {
 		// TODO Auto-generated method stub
-		return 0;
+		/*	•	Total Discount = Net Demand / Net Supply
+			•	Net Demand = Pending Sales Orders that are yet to be Delivered by the Counter
+			•	Net Supply = (0.7) * Total Burgers in Counter's Inventory + (0.3) * Number of Burgers Ordered (for Procurement) by Counter but not yet Received
+		*/
+		long netDemand = Foodistan.getfoodistan().getOdrsOnHold().size();
+		long netSupply = Foodistan.getfoodistan().getInvBurgr().countItem() + Foodistan.getfoodistan().getBurgerNeeded();
+		int discount = (int) (netDemand/netSupply);
+        return discount;
 	}
 	
 	@Override
-	public int refillInventory(Item item) {
+	public void refillInventory(Item item) {
 		// TODO Auto-generated method stub
 		if(!Foodistan.getfoodistan().odrsOnHold.isEmpty())
 		{  
@@ -65,9 +91,9 @@ public class ManagerImpl implements Manager {
 		}
 		else
 		
-		this.addItem(item);
+		this.addItem(Foodistan.getfoodistan().getInvBurgr(), item);
 		
-		return 0;
+		
 	}
 	
 	

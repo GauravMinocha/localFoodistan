@@ -10,7 +10,7 @@ public interface Manager {
     
     public int calculateDiscount();
     
-    public int refillInventory(Item item);
+    public void refillInventory(Item item);
        
 	
 }
