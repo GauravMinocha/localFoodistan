@@ -13,38 +13,50 @@ import minocha.foodistan.salesCounter.SalesCounter;
 public class Foodie {
 
 	private int foodieDiscount;
-	public enum Status {HUNGRY, EATING, WAITING} 
-	private Status foodieStatus;
+	public enum foodieStatus {HUNGRY, EATING, WAITING, DEAD} 
+	private foodieStatus fStatus;
 	private ItemType itmTyp;
-	private long waitStartTime;
 	private long eatTime;
-	//private Map<ItemType, Long> foodieItemEatTime = new HashMap<ItemType, Long>();
-	
-	//public Item requestOrder(SalesCounter sc, Map<String, Integer> itemTypeQuantity, int foodieDiscount){
-	//	sc.recordOrder(sc, itemTypeQuantity, foodieDiscount);
-	//    return null;
-	//}
-	
+	private long eatStartTime;
+	private long waitStartTime;
+	private long maxWaitTime;
+
+
+	public Foodie(int foodieDiscount, ItemType itmTyp, long eatTime) {
+		super();
+		this.setFoodieDiscount(foodieDiscount);
+		this.setfStatus(foodieStatus.HUNGRY);
+		this.setItmTyp(itmTyp);
+		this.setEatTime(eatTime);
+		this.setEatStartTime(0);
+		this.setWaitStartTime(0);
+		this.setMaxWaitTime(100000);
+	}
+   
 	public Item requestOrder(SalesCounter sc, ItemType itemType, int quantity, int foodieDiscount){
 		    return sc.recordOrder(itemType, quantity, foodieDiscount);
 		 	}
 	
 	public void consumeItem(Item item) {
-		
-	try {
-		Thread.sleep(this.eatTime);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-		
+		this.setfStatus(foodieStatus.EATING);
+		this.setEatStartTime(System.currentTimeMillis());
 	}
 
-	public Foodie(int foodieDiscount, ItemType itmTyp, long eatTime) {
-		super();
-		this.foodieDiscount = foodieDiscount;
-		this.itmTyp = itmTyp;
-		this.eatTime = eatTime;
+	
+	public long getMaxWaitTime() {
+		return maxWaitTime;
+	}
+
+	public void setMaxWaitTime(long maxWaitTime) {
+		this.maxWaitTime = maxWaitTime;
+	}
+
+	public long getEatStartTime() {
+		return eatStartTime;
+	}
+
+	public void setEatStartTime(long eatStartTime) {
+		this.eatStartTime = eatStartTime;
 	}
 
 	public long getEatTime() {
@@ -63,12 +75,12 @@ public class Foodie {
 		this.foodieDiscount = foodieDiscount;
 	}
 
-	public Status getFoodieStatus() {
-		return foodieStatus;
+	public foodieStatus getfStatus() {
+		return fStatus;
 	}
 
-	public void setFoodieStatus(Status foodieStatus) {
-		this.foodieStatus = foodieStatus;
+	public void setfStatus(foodieStatus fStatus) {
+		this.fStatus = fStatus;
 	}
 
 	public ItemType getItmTyp() {

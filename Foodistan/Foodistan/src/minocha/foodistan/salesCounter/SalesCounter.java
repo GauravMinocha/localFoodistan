@@ -8,26 +8,28 @@ import minocha.foodistan.item.Item;
 import minocha.foodistan.item.ItemType;
 import minocha.foodistan.manager.Foodistan;
 import minocha.foodistan.order.Order;
+import minocha.foodistan.order.Order.orderStatus;
 
 public class SalesCounter {
 	
 	private int sCounterNo;
-    public enum status {BUSY, FREE}
-    private status sCounterStatus;
+    public enum counterStatus {BUSY, FREE}
+    private counterStatus sCounterStatus;
    
 	public SalesCounter(int sCounterNo) {
 		super();
 		this.sCounterNo = sCounterNo;
-		this.sCounterStatus = status.FREE;
+		this.sCounterStatus = counterStatus.FREE;
 	}
     
     public Item recordOrder(ItemType itemType, int quantity, int orderDiscount){
-		
-    	Order order = new Order(itemType, orderDiscount, orderDiscount);
-    	Foodistan.getfoodistan().setOrdersRecieved(Foodistan.getfoodistan().getOrdersRecieved()+1);
-		return Foodistan.getfoodistan().getMg().processOrder(order);
-    
-    	}
+    	this.setsCounterStatus(counterStatus.BUSY);
+    	Order order = new Order(itemType, quantity, orderDiscount);
+    	Foodistan.getfoodistan().setOrdersReceived(Foodistan.getfoodistan().getOrdersReceived()+1);
+    	this.setsCounterStatus(counterStatus.FREE);
+    	Item itm = Foodistan.getfoodistan().getMg().processOrder(order);
+      	return itm;
+		}
     
     public int getCounterNo() {
 		return sCounterNo;
@@ -35,10 +37,10 @@ public class SalesCounter {
 	public void setCounterNo(int counterNo) {
 		this.sCounterNo = counterNo;
 	}
-	public status getCounterStatus() {
+	public counterStatus getCounterStatus() {
 		return sCounterStatus;
 	}
-	public void setsCounterStatus(status sCounterStatus) {
+	public void setsCounterStatus(counterStatus sCounterStatus) {
 		this.sCounterStatus = sCounterStatus;
 	}
    

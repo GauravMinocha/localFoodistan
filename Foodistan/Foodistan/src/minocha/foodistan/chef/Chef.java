@@ -6,7 +6,6 @@ import java.util.Map;
 
 import minocha.foodistan.item.Item;
 import minocha.foodistan.item.ItemType;
-import minocha.foodistan.item.Item.status;
 
 public class Chef {
 		
@@ -18,24 +17,23 @@ public class Chef {
 	private ItemType chefItemType;
 	private long currentCookTime;
 	private long defaultCookTime;
+	private long cookStartTime;
+
+	public Chef(ItemType chefItemType, long defaultCookTime) {
+		super();
+		this.chefItemType = chefItemType;
+		this.defaultCookTime = defaultCookTime;
+		this.currentCookTime = defaultCookTime;
+		this.setcStatus(chefStatus.FREE);
+	}
 	
-	public Item cookItem(ItemType itmType) {
+	public void cookItem(ItemType itmType) {
 	
 	if(this.getChefItemType() == itmType){
-	 this.cStatus = chefStatus.BUSY;
-		try {
-		Thread.sleep(this.getCurrentCookTime());
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	// TOD Auto-generated method stub
-	Item itm = new Item(itmType);
-    itm.setItemStatus(status.FRESH);
-    return itm;
+	this.cStatus = chefStatus.BUSY;
+    this.cookStartTime = System.currentTimeMillis();
    	}
-	else 
-	return null;
+
     }
 	
 	public chefStatus getcStatus() {
@@ -46,12 +44,13 @@ public class Chef {
 		this.cStatus = cStatus;
 	}
 
-	public Chef(ItemType chefItemType, long defaultCookTime) {
-		super();
-		this.chefItemType = chefItemType;
-		this.defaultCookTime = defaultCookTime;
+	public long getCookStartTime() {
+		return cookStartTime;
 	}
 
+	public void setCookStartTime(long cookStartTime) {
+		this.cookStartTime = cookStartTime;
+	}
 
 	public ItemType getChefItemType() {
 		return chefItemType;
@@ -72,6 +71,5 @@ public class Chef {
 		this.defaultCookTime = defaultCookTime;
 	}
 
-	
-	
+		
 }

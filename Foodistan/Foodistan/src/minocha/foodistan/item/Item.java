@@ -3,33 +3,28 @@ package minocha.foodistan.item;
 import java.util.HashMap;
 import java.util.Map;
 
-import minocha.foodistan.salesCounter.SalesCounter.status;
-
 public class Item {
 	
-	  private long itemLifeTime;
-	  private long itemStartTime = 0;
-	  public  enum status {FRESH, STALE};
-	  private status itemStatus;  
+	  public  enum itemStatus {FRESH, STALE};
+	  private itemStatus itmStatus;  
 	  private ItemType itemType;
-	  public static Map<String, Long> itemLifeTimeMap = new HashMap<String, Long>();
-	
+	  private long itemLifeTime;
+	  private long itemStartTime;
+	 
+	 public Item(ItemType itemType) {
+			super();
+		this.setItmStatus(itemStatus.FRESH);
+		this.setItemType(itemType);
+		this.setItemLifeTime(itemType.getLifeTime());
+		this.setItemStartTime(0l);	
+		}  
 	  
-	  public boolean isUsable(){
-		   if ((System.currentTimeMillis()-this.getItemStartTime())>this.getItemLifeTime())
+	 public boolean isUsable(){
+		   if ((System.currentTimeMillis()-this.getItemStartTime())<this.getItemLifeTime())
 		    	return true;
-		    		return false;
+		   else 
+			   	return false;
 		   }
-
-
-	public Item(ItemType itemType) {
-		super();
-		this.itemLifeTime = itemType.getLifeTime();
-		this.itemStartTime = System.currentTimeMillis();
-		this.itemStatus = status.FRESH;
-		this.itemType = itemType;
-	}
-
 
 	public long getItemLifeTime() {
 		return itemLifeTime;
@@ -49,14 +44,13 @@ public class Item {
 		this.itemStartTime = itemStartTime;
 	}
 
-	public status getItemStatus() {
-		return itemStatus;
+	public itemStatus getItmStatus() {
+		return itmStatus;
 	}
 
-	public void setItemStatus(status itemStatus) {
-		this.itemStatus = itemStatus;
+	public void setItmStatus(itemStatus itmStatus) {
+		this.itmStatus = itmStatus;
 	}
-
 
 	public ItemType getItemType() {
 		return itemType;
@@ -66,16 +60,5 @@ public class Item {
 	public void setItemType(ItemType itemType) {
 		this.itemType = itemType;
 	}
-
-
-	public static Map<String, Long> getItemLifeTimeMap() {
-		return itemLifeTimeMap;
-	}
-
-
-	public static void setItemLifeTimeMap(Map<String, Long> itemLifeTimeMap) {
-		Item.itemLifeTimeMap = itemLifeTimeMap;
-	}
-
 
 }
