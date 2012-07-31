@@ -30,7 +30,7 @@ public class Foodie {
 		this.setEatTime(eatTime);
 		this.setEatStartTime(0);
 		this.setWaitStartTime(0);
-		this.setMaxWaitTime(100000);
+		this.setMaxWaitTime(600000);
 	}
    
 	public Item requestOrder(SalesCounter sc, ItemType itemType, int quantity, int foodieDiscount){

@@ -1,10 +1,7 @@
 package minocha.foodistan.manager;
 
-import java.util.Iterator;
-
 import minocha.foodistan.inventory.Inventory;
 import minocha.foodistan.item.Item;
-import minocha.foodistan.item.ItemType;
 import minocha.foodistan.order.Order;
 import minocha.foodistan.order.Order.orderStatus;
 
@@ -44,20 +41,22 @@ public class ManagerImpl implements Manager {
 	}
 	@Override
 	public long calculateDiscount() {
-		// TODO Auto-generated method stub
 		/*	•	Total Discount = Net Demand / Net Supply
 			•	Net Demand = Pending Sales Orders that are yet to be Delivered by the Counter
 			•	Net Supply = (0.7) * Total Burgers in Counter's Inventory + (0.3) * Number of Burgers Ordered (for Procurement) by Counter but not yet Received
 		*/
-			int netDemand = Foodistan.getfoodistan().getOdrsOnHold().size();
-			int netSupply = Foodistan.getfoodistan().getInv().countItem() + Foodistan.getfoodistan().getBurgerNeeded();
+		if(Foodistan.getfoodistan().getInv().countItem() == 0){
+			return 90;
+			
+		}
+		     int netDemand = Foodistan.getfoodistan().getOdrsOnHold().size();
+			double netSupply = (0.7*Foodistan.getfoodistan().getInv().countItem()) + (0.3*Foodistan.getfoodistan().getBurgerNeeded());
 			long discount; 
 			try{
-			 discount = (netDemand * 100)/netSupply;
+			 discount =  (long) ((long)(netDemand * 100)/netSupply);
 	        }
 			catch (ArithmeticException e){
-	        	
-               return 25l;	        	
+	        	 return 25l;	        	
 	        	
 	        }
 			return discount;

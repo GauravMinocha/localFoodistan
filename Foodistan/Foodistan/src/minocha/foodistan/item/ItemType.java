@@ -2,7 +2,7 @@ package minocha.foodistan.item;
 
 public enum ItemType {
 	
-	BURGER(10000);
+	BURGER(1800000);
 	
 	int lifeTime;
 	

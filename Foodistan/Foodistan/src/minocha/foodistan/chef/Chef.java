@@ -12,7 +12,7 @@ public class Chef {
 	//private Map<ItemType, Long> chefItemTime = new HashMap<ItemType, Long>();
 	//private Map<ItemType, Long> chefItemDefaultTime = new HashMap<ItemType, Long>();
 	
-	public enum chefStatus {FREE, BUSY} 
+	public enum chefStatus {FREE, BUSY, SPEEDUPDATE} 
 	private chefStatus cStatus;
 	private ItemType chefItemType;
 	private long currentCookTime;
