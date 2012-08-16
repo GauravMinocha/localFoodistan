@@ -1,21 +1,16 @@
 package minocha.foodistan.inventory;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import minocha.foodistan.item.*;
-import minocha.foodistan.item.Item.itemStatus;
-
-import minocha.foodistan.manager.Foodistan;
 
 public class Inventory {
 
    public Queue<Item> items = new LinkedList<Item>();
 
-   private boolean removeStale() {
+/*   private boolean removeStale() {
 	// TODO Auto-generated method stub
 		 Foodistan fdistan = Foodistan.getfoodistan(); 
 		 boolean b = false;
@@ -32,7 +27,7 @@ public class Inventory {
         	 }
          }
 			  return b;
-   }
+   }*/
    public int countItem()
    {  
 	   	//removeStale();
@@ -48,10 +43,18 @@ public class Inventory {
    public Item removeItem()
    {
 	   //removeStale();
-       if(!this.items.isEmpty()) 
-	   return this.items.poll();
+      try{
+	   if(!this.items.isEmpty()) {
+	   Item itm = this.items.poll();
+	   return itm;
+	   
+	   }
        else
     	   return null;
+      }catch(NoSuchElementException e){
+    	  
+    	  return null;
+      }
    }
  
 }

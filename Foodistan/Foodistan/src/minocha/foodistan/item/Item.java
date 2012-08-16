@@ -1,8 +1,5 @@
 package minocha.foodistan.item;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Item {
 	
 	  public  enum itemStatus {FRESH, STALE};
@@ -16,7 +13,7 @@ public class Item {
 		this.setItmStatus(itemStatus.FRESH);
 		this.setItemType(itemType);
 		this.setItemLifeTime(itemType.getLifeTime());
-		this.setItemStartTime(0l);	
+		this.setItemStartTime(System.currentTimeMillis());	
 		}  
 	  
 	 public boolean isUsable(){

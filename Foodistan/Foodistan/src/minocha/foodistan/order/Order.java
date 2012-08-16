@@ -1,21 +1,28 @@
 package minocha.foodistan.order;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import minocha.foodistan.item.ItemType;
+/*
+ * Order Entity:
+ * ordrItmTyp: Item type ordered
+ * orderQuantity: Quantity of ordrItmTyp
+ * orderDiscount: Discount expected by Foodie 
+ * orderStatus: 
+ * RELEASED: Order recorded 
+ * HOLD: Order is on hold 
+ * COMPLETE: Order is completed 
+ */
 
 public class Order {
 
 	//private static int ordrId;
 	//private Map<ItemType, Integer> orderItemTypeQuantity = new HashMap<ItemType, Integer>();
+
 	private ItemType ordrItmTyp;
 	private int ordrQuantity;
 	private int ordrDiscount;
-    public enum orderStatus {RELEASED, HOLD, COMPLETE};
-    private orderStatus ordrStatus;  
-    
+	public enum orderStatus {RELEASED, HOLD, COMPLETE};
+	private orderStatus ordrStatus;  
+
 	public Order(ItemType ordrItmTyp, int ordrQuantity, int ordrDiscount) {
 		super();
 		this.ordrItmTyp = ordrItmTyp;
@@ -23,6 +30,7 @@ public class Order {
 		this.ordrDiscount = ordrDiscount;
 		this.setOrdrStatus(orderStatus.RELEASED);
 	}
+
 	public ItemType getOrdrItmTyp() {
 		return ordrItmTyp;
 	}
@@ -48,5 +56,5 @@ public class Order {
 		this.ordrStatus = ordrStatus;
 	}
 
- 
+
 }

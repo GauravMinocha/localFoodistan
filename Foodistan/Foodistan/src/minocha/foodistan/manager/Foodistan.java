@@ -13,7 +13,6 @@ import minocha.foodistan.order.Order;
 import minocha.foodistan.order.Order.orderStatus;
 import minocha.foodistan.salesCounter.*;
 
-
 //Assumptions 
 //	1.  Foodie order a particular type of item.
 //	2.  Chef can produce a particular type of item.
@@ -22,6 +21,7 @@ public class Foodistan {
 
 	private static final Foodistan ref = new Foodistan();
 	private int speedUp;
+	int speedFactor;
 	int speedDown;
 	long foodistanEndTime;
 	public int burgerNeeded;
@@ -33,6 +33,7 @@ public class Foodistan {
 	public long maxWaitingTime;
 	public long avgItemLifeTime;
 	public int deathPenalty = 0;
+	public int avgDiscount = 0;
 	private Manager mg = new ManagerImpl();
 	public ArrayList<SalesCounter> salesCounters = new ArrayList<SalesCounter>(); 
 	public ArrayList<Foodie> foodies = new ArrayList<Foodie>();
@@ -49,10 +50,12 @@ public class Foodistan {
 	private Foodistan(){
 		System.out.println(Thread.currentThread().getName()+ " Created new Foodistan Object");
 		speedUp=1;
+		speedFactor = 50;
 	}
 
 	public SalesCounter getSalesCounter() {
 		return this.getSalesCounters().get(0);
+		// to be added when sales counter are increased 
 		/*	boolean found = false;
 		int i = 0;
 	for(; i< this.getSalesCounters().size(); i++){
@@ -71,6 +74,22 @@ public class Foodistan {
 
 	public synchronized void setSpeedUp(int speedUp) {
 		this.speedUp = speedUp;
+	}
+
+	public int getSpeedFactor() {
+		return speedFactor;
+	}
+
+	public void setSpeedFactor(int speedFactor) {
+		this.speedFactor = speedFactor;
+	}
+
+	public int getAvgDiscount() {
+		return avgDiscount;
+	}
+
+	public void setAvgDiscount(int avgDiscount) {
+		this.avgDiscount = avgDiscount;
 	}
 
 	public int getSpeedDown() {
@@ -217,49 +236,69 @@ public class Foodistan {
 	} 
 
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args)
-	{	   	
-		int foodies = 0;
+	{	
+		// to parse the input with validation checks
 		Foodistan fdistan = getfoodistan();
 		//java fs {F1, F2, F3 ...} {C1, C2, C3 .....} n
 		//;
-		int i=0;
 		int curl=0;
 		int curlC=0;
+		String delimiter=",";
 
-		for(String s: args){
-			if(s.equalsIgnoreCase("{")){
+		try{for(String s: args){
+			String[] temp = s.split(delimiter);
+
+
+			if(temp[0].equalsIgnoreCase("{")){
 				curl++;
 			}
-			if(s.equalsIgnoreCase("}")){
+			if(temp[0].equalsIgnoreCase("}")){
 				curlC++;
 			}
-			if(((!s.equalsIgnoreCase("{"))) && curl == 1 && curlC !=1){
+			if(((!temp[0].equalsIgnoreCase("{"))) && curl == 1 && curlC !=1){
 				//System.out.println(s);
-				if(Integer.parseInt(s) < 0 || Integer.parseInt(s) > 100){
-					System.out.println("Invalid Foodie Discount" + s);
+				if(Integer.parseInt(temp[0]) < 0 || Integer.parseInt(temp[0]) > 100){
+					System.out.println("Invalid Foodie Discount" + temp[0]);
 					System.exit(1);
 				}
-				Foodie fd1 = new Foodie(Integer.parseInt(s), ItemType.BURGER, 300000l);
+				Foodie fd1 = new Foodie(Integer.parseInt(temp[0]), ItemType.BURGER, 300000l);
 				fdistan.foodies.add(fd1);
 			}
-			if(((!s.equalsIgnoreCase("}"))&&(!s.equalsIgnoreCase("{"))) && curl == 2 && curlC != 2){
+			if(((!temp[0].equalsIgnoreCase("}"))&&(!s.equalsIgnoreCase("{"))) && curl == 2 && curlC != 2){
 				//System.out.println(s+"hello");
-				
-				if(Long.parseLong(s) == 0){
-					System.out.println("Invalid chef cooking time" + s);
+
+				if(Long.parseLong(temp[0]) <= 0){
+					System.out.println("Invalid chef cooking speed " + temp[0]);
 					System.exit(1);
 				}
-				
-				long cookTime = 3600000l/Long.parseLong(s);
+
+				long cookTime = 3600000l/Long.parseLong(temp[0]);
 				Chef cf = new Chef(ItemType.BURGER, cookTime);
 				fdistan.chefs.add(cf);
 			} 
-			if(curlC==2 && !s.equalsIgnoreCase("}")){
-				Foodistan.getfoodistan().setFoodistanEndTime(Long.parseLong(s)*60000l + System.currentTimeMillis());
-				System.out.println(s+"heelo");
+			if(curlC==2 && !temp[0].equalsIgnoreCase("}")){
+				if(temp[0] == "" || Long.parseLong(temp[0]) <=0){
+					System.out.println("Please enter correct time");
+					System.exit(1);
+
+				}
+				Foodistan.getfoodistan().setFoodistanEndTime(Long.parseLong(temp[0])*60000l + System.currentTimeMillis());
+				//System.out.println(s+"heelo");
 
 			}  
+		}
+		}catch(NumberFormatException e){
+			System.out.println(" please check the imput format");
+			System.exit(1);
+		}
+
+		if( fdistan.getFoodies().size() == 0 || fdistan.getChefs().size() == 0){
+			System.out.println(" Either chef or foodies not present");
+			System.exit(1);
 		}
 
 		SalesCounter s1 = new SalesCounter(1);
@@ -268,8 +307,24 @@ public class Foodistan {
 		for (j=0;j<fdistan.getChefs().size();j++) {
 			fdistan.chefs.get(j).cookItem(ItemType.BURGER);
 		}
+		int f=0;
 
-		//fdistan.setSpeedUp(1);
+		for(f=0; f<fdistan.getFoodies().size(); f++){
+			fdistan.setAvgDiscount(fdistan.getAvgDiscount()+fdistan.getFoodies().get(f).getFoodieDiscount());
+
+		}
+		fdistan.setAvgDiscount((int)(fdistan.getAvgDiscount()/fdistan.getFoodies().size()));
+
+		if(fdistan.getAvgDiscount() > 50 && fdistan.getAvgDiscount() < 70)
+		{
+			fdistan.setSpeedFactor(75);
+
+		}
+		else if(fdistan.getAvgDiscount() > 70) 
+		{
+
+			fdistan.setSpeedFactor(95);
+		}
 
 		ThreadA ta = new ThreadA ();
 		ThreadB tb = new ThreadB ();
@@ -278,10 +333,10 @@ public class Foodistan {
 		ThreadE te = new ThreadE ();
 		ThreadF tf = new ThreadF ();
 		ThreadG tg = new ThreadG ();
-		ThreadM tm = new ThreadM ();
 		ThreadN tn = new ThreadN ();
+		ThreadO to = new ThreadO ();
 		// Thread 1 - to order 
-
+		to.start();
 		ta.start();
 		tb.start();
 		tc.start();
@@ -289,22 +344,9 @@ public class Foodistan {
 		te.start();
 		tf.start();
 		tg.start();
-		//tm.start();
 		tn.start();
+	
 
-		if(System.currentTimeMillis() > Foodistan.getfoodistan().getFoodistanEndTime()){
-			System.out.println(Foodistan.getfoodistan().getOrdersReceived()+ " Final Orders Received");
-			System.out.println(Foodistan.getfoodistan().getOrdersDelivered()+ " Final Orders Delivered");
-			System.out.println(Foodistan.getfoodistan().getBurgersWasted()+ " Final Burgers Wasted");
-			System.out.println(Foodistan.getfoodistan().getDeathPenalty()+ " Final Foodie died");
-			System.out.println(Foodistan.getfoodistan().getOdrsOnHold().size() + " Final Orders on hold");
-			System.out.println(Foodistan.getfoodistan().getFoodiesOnHold().size() + " Final Foodies on hold");
-			System.out.println(Foodistan.getfoodistan().getInv().countItem()+ " Final Inventory");
-			System.out.println(Foodistan.getfoodistan().getBurgerNeeded() + " Final Burgers needed");
-			System.out.println(Foodistan.getfoodistan().getMg().calculateDiscount() + " Final discount");
-			System.out.println(Foodistan.getfoodistan().getAvgWaitingTime() + " Final avg waiting time in minutes");
-
-		}
 	}
 }
 //Thread A : To check if the chef has cooked the food, if yes set it's status to FREE
@@ -388,6 +430,7 @@ class ThreadF extends Thread {
 
 	public void run() {
 		Foodistan fdistan = Foodistan.getfoodistan();
+		long waitTime =0l;
 		while(System.currentTimeMillis() <= Foodistan.getfoodistan().getFoodistanEndTime()){ 
 			for (int x=0;x<fdistan.getFoodies().size();x++) {
 				Foodie f = fdistan.getFoodies().get(x);
@@ -396,8 +439,12 @@ class ThreadF extends Thread {
 					if((fdistan.getMg().hasInventory(Foodistan.getfoodistan().getInv(), 1)==false) || (fdistan.getMg().calculateDiscount() < f.getFoodieDiscount())){
 					}
 					else {
-						fdistan.setAvgWaitingTime(fdistan.getAvgWaitingTime()+(System.currentTimeMillis()-f.getWaitStartTime()));  
-						fdistan.getFoodies().get(x).consumeItem(fdistan.getMg().getItem(fdistan.getInv(), 1));
+						waitTime = System.currentTimeMillis()-f.getWaitStartTime();
+						if (waitTime > fdistan.getMaxWaitingTime()) fdistan.setMaxWaitingTime(waitTime);
+						fdistan.setAvgWaitingTime(fdistan.getAvgWaitingTime()+waitTime);
+						Item itm = fdistan.getMg().getItem(fdistan.getInv());
+						fdistan.getFoodies().get(x).consumeItem(itm);
+						fdistan.setAvgItemLifeTime(fdistan.getAvgItemLifeTime() + (System.currentTimeMillis() - itm.getItemStartTime()));
 						fdistan.getOdrsOnHold().remove(0).setOrdrStatus(orderStatus.COMPLETE);
 						fdistan.getFoodiesOnHold().remove(0);
 						fdistan.setBurgerNeeded(fdistan.getBurgerNeeded()-1);
@@ -417,7 +464,7 @@ class ThreadD extends Thread {
 			for (int z=0;z<fdistan.getFoodies().size();z++) {
 				Foodie f = fdistan.foodies.get(z);
 				if (f.getfStatus() == foodieStatus.WAITING){
-				/*	if((f.getMaxWaitTime() + f.getWaitStartTime()) - System.currentTimeMillis() < 10000l)
+					/*	if((f.getMaxWaitTime() + f.getWaitStartTime()) - System.currentTimeMillis() < 10000l)
 					{
 						if(fdistan.getMg().hasInventory(fdistan.getInv(), 1)){
 							fdistan.setAvgWaitingTime(fdistan.getAvgWaitingTime()+(System.currentTimeMillis()-f.getWaitStartTime()));  
@@ -426,12 +473,15 @@ class ThreadD extends Thread {
 							fdistan.getFoodiesOnHold().remove(0);
 							fdistan.setBurgerNeeded(fdistan.getBurgerNeeded()-1);
 							fdistan.setOrdersDelivered(Foodistan.getfoodistan().getOrdersDelivered()+1);	
-										
+
 						}
-						
+
 					}*/
 					if ((f.getMaxWaitTime() + f.getWaitStartTime()) < System.currentTimeMillis()){
 						fdistan.foodies.get(z).setfStatus(foodieStatus.DEAD);
+						fdistan.getFoodiesOnHold().remove(0);
+						fdistan.getOdrsOnHold().remove(0);
+						fdistan.setBurgerNeeded(fdistan.getBurgerNeeded()-1);
 						fdistan.setAvgWaitingTime(fdistan.getAvgWaitingTime()+(f.getMaxWaitTime()));
 						fdistan.setDeathPenalty(fdistan.getDeathPenalty()+1);
 					}
@@ -461,23 +511,36 @@ class ThreadE extends Thread {
       	•	Average life of Burgers / Order Delivered (Minimize)
       	•	I will assign weights to above parameters and share a definitive formula to decide the best solution*/
 
-			System.out.println(Foodistan.getfoodistan().getOrdersReceived()+ " Orders Received");
-			System.out.println(Foodistan.getfoodistan().getOrdersDelivered()+ " Orders Delivered");
-			System.out.println(Foodistan.getfoodistan().getBurgersWasted()+ " Burgers Wasted");
-			System.out.println(Foodistan.getfoodistan().getDeathPenalty()+ " Foodie died");
-			System.out.println(Foodistan.getfoodistan().getOdrsOnHold().size() + " Orders on hold");
-			System.out.println(Foodistan.getfoodistan().getFoodiesOnHold().size() + " Foodies on hold");
-			System.out.println(Foodistan.getfoodistan().getInv().countItem()+ " Inventory");
-			System.out.println(Foodistan.getfoodistan().getBurgerNeeded() + " Burgers needed");
-			System.out.println(Foodistan.getfoodistan().getMg().calculateDiscount() + " Discount");
-			//System.out.println(Foodistan.getfoodistan().getSpeedUp() + " speedup");
+
+			System.out.println("Orders Received -------> " + Foodistan.getfoodistan().getOrdersReceived());
+			System.out.println("Orders Delivered ------> " + Foodistan.getfoodistan().getOrdersDelivered());
+			System.out.println("Burgers Wasted --------> " + Foodistan.getfoodistan().getBurgersWasted());
+			System.out.println("Foodies Died ----------> " + Foodistan.getfoodistan().getDeathPenalty());
+			System.out.println("Speed Factor ----------> " + Foodistan.getfoodistan().getSpeedFactor());
+			System.out.println("Orders on Hold -------->" + Foodistan.getfoodistan().getOdrsOnHold().size());
+			System.out.println("Foodies on Hold ------->" + Foodistan.getfoodistan().getFoodiesOnHold().size());
+			System.out.println("Current Inventory ----->" + Foodistan.getfoodistan().getInv().countItem());
+			//System.out.println("Burgers Needed -------->" + Foodistan.getfoodistan().getBurgerNeeded());
+			System.out.println("Current Discount ------>" + Foodistan.getfoodistan().getMg().calculateDiscount());
+			if(Foodistan.getfoodistan().getDeathPenalty()>1){
+				System.out.println("Max. Wait Time(ms) ----> 600000");
+			}
+			else{
+				System.out.println("Max. Wait Time(ms) ----> " + Foodistan.getfoodistan().getMaxWaitingTime());
+			}
 			try{
-				System.out.println((Foodistan.getfoodistan().getAvgWaitingTime()/(Foodistan.getfoodistan().getOrdersReceived())) + " Avg. waiting time in milli seconds");
+				System.out.println("Avg. Waiting Time(ms) -> " + (Foodistan.getfoodistan().getAvgWaitingTime()/(Foodistan.getfoodistan().getOrdersReceived())));
 			}
 			catch(ArithmeticException a){
-				System.out.println( 0 +" Avg. waiting time in milli-seconds");
+				System.out.println("Avg. Waiting Time(ms) -> 0");
+			}
+			try{
+				System.out.println("Avg. Burger Life(ms) --> " + (Foodistan.getfoodistan().getAvgItemLifeTime()/(Foodistan.getfoodistan().getOrdersDelivered() + Foodistan.getfoodistan().getBurgersWasted())));
+			}catch (ArithmeticException a){
+				System.out.println("Avg. Burger Life(ms) --> 0");
 
 			}
+			System.out.println("                          ");
 			//System.out.println(Foodistan.getfoodistan().getMg().calculateDiscount() + " Discount");
 		}
 
@@ -486,7 +549,7 @@ class ThreadE extends Thread {
 }
 
 // to manipulate chef speed
-class ThreadM extends Thread {
+/*class ThreadM extends Thread {
 	public void run() {
 
 		Foodistan fdistan = Foodistan.getfoodistan();
@@ -497,7 +560,7 @@ class ThreadM extends Thread {
 	                 if(speedHold<4){
 					fdistan.setSpeedUp(speedHold);
 	                 }
-		
+
 			}
 			if((!fdistan.getInv().items.isEmpty() && (fdistan.getMg().calculateDiscount() > 40)) && fdistan.getSpeedUp()>2 ){
 				// increase speed 
@@ -509,7 +572,7 @@ class ThreadM extends Thread {
 		}
 	}
 }
-
+ */
 
 //
 class ThreadN extends Thread {
@@ -520,30 +583,56 @@ class ThreadN extends Thread {
 			for (int k=0;k<fdistan.getChefs().size();k++) {
 				Chef c = fdistan.chefs.get(k);
 				if (c.getcStatus() == chefStatus.SPEEDUPDATE){
-					if((fdistan.getInv().countItem() > (fdistan.getBurgerNeeded()+fdistan.getFoodies().size()))){
-					    long changeUpTime = c.getCurrentCookTime()*2;
-					    if(changeUpTime <= 3600000){
-					    	fdistan.chefs.get(k).setCurrentCookTime(changeUpTime);
-					    }
-					    else {
-					    	fdistan.chefs.get(k).setCurrentCookTime(fdistan.chefs.get(k).getDefaultCookTime());	
-					 	    }
+					// decreasing speed
+					if(fdistan.getInv().items.size() > fdistan.getBurgerNeeded()){
+						long changeUpTime = c.getCurrentCookTime()*2;
+						if(changeUpTime <= 3600000){
+							fdistan.chefs.get(k).setCurrentCookTime(changeUpTime);
+						}
+						else {
+							if(fdistan.getAvgDiscount()<40){
+							fdistan.chefs.get(k).setCurrentCookTime(fdistan.chefs.get(k).getDefaultCookTime());	
+							}
+						
+						}
 					}
-					if((!fdistan.getInv().items.isEmpty() && (fdistan.getMg().calculateDiscount() > 40))){
-					    long changeDownTime = c.getCurrentCookTime()/2;
+					// increasing speed
+					if(fdistan.getInv().items.size() < fdistan.getBurgerNeeded()){
+						long changeDownTime = c.getCurrentCookTime()/2;
+						
 						if(	changeDownTime > 1){
-							
+
 							fdistan.chefs.get(k).setCurrentCookTime(changeDownTime);	
 						}
-						  else {
-						    	fdistan.chefs.get(k).setCurrentCookTime(fdistan.chefs.get(k).getDefaultCookTime());	
-						 	    }
+					
+					
 					}
 					fdistan.chefs.get(k).setcStatus(chefStatus.FREE);
-				   }
 				}
 			}
-			
 		}
+
+	}
 }
-	
+
+//Thread to remove stale burger
+class ThreadO extends Thread{
+
+	public void run(){
+		Foodistan fdistan = Foodistan.getfoodistan();
+		
+		while(System.currentTimeMillis() <= Foodistan.getfoodistan().getFoodistanEndTime()){
+		System.out.println(fdistan.getInv().items.isEmpty());
+			if(!fdistan.getInv().items.isEmpty()){
+			if ((System.currentTimeMillis() - fdistan.getInv().items.peek().getItemStartTime()) > ItemType.BURGER.getLifeTime()){
+				fdistan.getInv().items.poll();
+				System.out.println("helloob    djknkdnndknkxnkndndkndk");
+				fdistan.setBurgersWasted(fdistan.getBurgersWasted()+1);
+				fdistan.setAvgItemLifeTime(fdistan.getAvgItemLifeTime()+ItemType.BURGER.getLifeTime());
+			}
+		}
+	}
+	}
+
+}
+
