@@ -620,19 +620,53 @@ class ThreadO extends Thread{
 
 	public void run(){
 		Foodistan fdistan = Foodistan.getfoodistan();
-		
+
 		while(System.currentTimeMillis() <= Foodistan.getfoodistan().getFoodistanEndTime()){
-		System.out.println(fdistan.getInv().items.isEmpty());
+			//System.out.println(fdistan.getInv().items.isEmpty());
+
+		    long waitTime = 180000L;
 			if(!fdistan.getInv().items.isEmpty()){
-			if ((System.currentTimeMillis() - fdistan.getInv().items.peek().getItemStartTime()) > ItemType.BURGER.getLifeTime()){
-				fdistan.getInv().items.poll();
-				System.out.println("helloob    djknkdnndknkxnkndndkndk");
-				fdistan.setBurgersWasted(fdistan.getBurgersWasted()+1);
-				fdistan.setAvgItemLifeTime(fdistan.getAvgItemLifeTime()+ItemType.BURGER.getLifeTime());
+				
+				if (System.currentTimeMillis() > (180000L + fdistan.getInv().items.peek().getItemStartTime())){
+					fdistan.getInv().items.poll();
+					fdistan.setBurgersWasted(fdistan.getBurgersWasted()+1);
+					fdistan.setAvgItemLifeTime(fdistan.getAvgItemLifeTime()+ItemType.BURGER.getLifeTime());
+				}
+				waitTime = (fdistan.getInv().items.peek().getItemStartTime()+180000L)- System.currentTimeMillis();
+				
 			}
+			System.out.println("Stale burgers it ");	
+				if(waitTime<0)
+					continue;
+			try{
+				       
+              			Thread.currentThread().sleep(waitTime);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			   
+			/*
+			while(!(fdistan.getInv().items.isEmpty())){
+			    System.out.println(fdistan.getInv().items.isEmpty());
+				System.out.println("System time update " + System.currentTimeMillis());
+				System.out.println("System time update " + fdistan.getInv().items.peek().getItemStartTime());
+				System.out.println("System time update " + (System.currentTimeMillis() - fdistan.getInv().items.peek().getItemStartTime()));
+															
+				//System.out.println("Outside it ");
+				if (System.currentTimeMillis() > (180000L + fdistan.getInv().items.peek().getItemStartTime())){
+					fdistan.getInv().items.poll();
+					System.out.println("inside it ");
+					//jjSystem.exit(1);
+
+					fdistan.setBurgersWasted(fdistan.getBurgersWasted()+1);
+					fdistan.setAvgItemLifeTime(fdistan.getAvgItemLifeTime()+ItemType.BURGER.getLifeTime());
+				}else
+					System.out.println("outside it ");	
+			}  */
 		}
-	}
+
 	}
 
 }
+
 
