@@ -54,7 +54,7 @@ public class ManagerImpl implements Manager {
 		}
 		int netDemand = Foodistan.getfoodistan().getOdrsOnHold().size();
 		if(netDemand == 0){
-			netDemand = 10;
+			netDemand = 0;
 		}
 		double netSupply = ((0.7)*Foodistan.getfoodistan().getInv().countItem()) + ((0.3)*Foodistan.getfoodistan().getBurgerNeeded());
 		long discount; 
@@ -62,7 +62,7 @@ public class ManagerImpl implements Manager {
 			discount =  (long) ((long)(netDemand * 100)/netSupply);
 		}
 		catch (ArithmeticException e){
-			return 25l;	        	
+			return 100;	        	
 		}
 		if(discount > 100) return 100;
 		else return discount;

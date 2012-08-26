@@ -24,6 +24,7 @@ public class Chef {
 	private long currentCookTime;
 	private long defaultCookTime;
 	private long cookStartTime;
+	private long backUpCookTime;
 
 	public Chef(ItemType chefItemType, long defaultCookTime) {
 		super();
@@ -31,6 +32,7 @@ public class Chef {
 		this.defaultCookTime = defaultCookTime;
 		this.currentCookTime = defaultCookTime;
 		this.setcStatus(chefStatus.FREE);
+		this.backUpCookTime = defaultCookTime;
 	}
 
 	/*
@@ -81,6 +83,14 @@ public class Chef {
 	}
 	public void setDefaultCookTime(long defaultCookTime) {
 		this.defaultCookTime = defaultCookTime;
+	}
+
+	public long getBackUpCookTime() {
+		return backUpCookTime;
+	}
+
+	public void setBackUpCookTime(long backUpCookTime) {
+		this.backUpCookTime = backUpCookTime;
 	}
 
 

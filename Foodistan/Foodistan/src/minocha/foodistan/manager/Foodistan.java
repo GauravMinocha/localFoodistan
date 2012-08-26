@@ -1,6 +1,10 @@
 package minocha.foodistan.manager;
 
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
 import minocha.foodistan.chef.Chef;
 import minocha.foodistan.chef.Chef.chefStatus;
 
@@ -35,12 +39,12 @@ public class Foodistan {
 	public int deathPenalty = 0;
 	public int avgDiscount = 0;
 	private Manager mg = new ManagerImpl();
-	public ArrayList<SalesCounter> salesCounters = new ArrayList<SalesCounter>(); 
-	public ArrayList<Foodie> foodies = new ArrayList<Foodie>();
-	public ArrayList<Chef> chefs = new ArrayList<Chef>();
-	public ArrayList<Order> odrsOnHold = new ArrayList<Order>();
-	public ArrayList<Foodie> foodiesOnHold = new ArrayList<Foodie>();
-	public ArrayList<Order> completeOrders = new ArrayList<Order>();
+	public List<SalesCounter> salesCounters = new Vector<SalesCounter>(); 
+	public List<Foodie> foodies = new Vector<Foodie>();
+	public List<Chef> chefs = new Vector<Chef>();
+	public List<Order> odrsOnHold = new Vector<Order>();
+	public List<Foodie> foodiesOnHold = new Vector<Foodie>();
+	public List<Order> completeOrders = new Vector<Order>();
 	public Inventory Inv = new Inventory();
 
 	public static synchronized Foodistan getfoodistan(){
@@ -66,6 +70,54 @@ public class Foodistan {
 	}
 	 if(found==false) 
 	   return null;*/
+	}
+
+	public List<SalesCounter> getSalesCounters() {
+		return salesCounters;
+	}
+
+	public void setSalesCounters(List<SalesCounter> salesCounters) {
+		this.salesCounters = salesCounters;
+	}
+
+	public List<Foodie> getFoodies() {
+		return foodies;
+	}
+
+	public void setFoodies(List<Foodie> foodies) {
+		this.foodies = foodies;
+	}
+
+	public List<Chef> getChefs() {
+		return chefs;
+	}
+
+	public void setChefs(List<Chef> chefs) {
+		this.chefs = chefs;
+	}
+
+	public List<Order> getOdrsOnHold() {
+		return odrsOnHold;
+	}
+
+	public void setOdrsOnHold(List<Order> odrsOnHold) {
+		this.odrsOnHold = odrsOnHold;
+	}
+
+	public List<Foodie> getFoodiesOnHold() {
+		return foodiesOnHold;
+	}
+
+	public void setFoodiesOnHold(List<Foodie> foodiesOnHold) {
+		this.foodiesOnHold = foodiesOnHold;
+	}
+
+	public List<Order> getCompleteOrders() {
+		return completeOrders;
+	}
+
+	public void setCompleteOrders(List<Order> completeOrders) {
+		this.completeOrders = completeOrders;
 	}
 
 	public synchronized int getSpeedUp() {
@@ -136,33 +188,24 @@ public class Foodistan {
 		this.avgItemLifeTime = avgItemLifeTime;
 	}
 
-	public ArrayList<Order> getOdrsOnHold() {
-		return odrsOnHold;
-	}
+
 
 	public void setOdrsOnHold(ArrayList<Order> odrsOnHold) {
 		this.odrsOnHold = odrsOnHold;
 	}
 
-	public ArrayList<Foodie> getFoodiesOnHold() {
-		return foodiesOnHold;
-	}
+
 
 	public void setFoodiesOnHold(ArrayList<Foodie> foodiesOnHold) {
 		this.foodiesOnHold = foodiesOnHold;
 	}
 
-	public ArrayList<Order> getCompleteOrders() {
-		return completeOrders;
-	}
 
 	public void setCompleteOrders(ArrayList<Order> completeOrders) {
 		this.completeOrders = completeOrders;
 	}
 
-	public ArrayList<SalesCounter> getSalesCounters() {
-		return salesCounters;
-	}
+
 
 	public long getFoodistanEndTime() {
 		return foodistanEndTime;
@@ -176,15 +219,11 @@ public class Foodistan {
 	public void setDeathPenalty(int deathPenalty) {
 		this.deathPenalty = deathPenalty;
 	}
-	public ArrayList<Foodie> getFoodies() {
-		return foodies;
-	}
+
 	public void setFoodies(ArrayList<Foodie> foodies) {
 		this.foodies = foodies;
 	}
-	public ArrayList<Chef> getChefs() {
-		return chefs;
-	}
+
 	public void setChefs(ArrayList<Chef> chefs) {
 		this.chefs = chefs;
 	}
@@ -335,6 +374,7 @@ public class Foodistan {
 		ThreadG tg = new ThreadG ();
 		ThreadN tn = new ThreadN ();
 		ThreadO to = new ThreadO ();
+		ThreadK tk = new ThreadK ();
 		// Thread 1 - to order 
 		to.start();
 		ta.start();
@@ -345,7 +385,8 @@ public class Foodistan {
 		tf.start();
 		tg.start();
 		tn.start();
-	
+		tk.start();
+
 
 	}
 }
@@ -573,9 +614,73 @@ class ThreadE extends Thread {
 	}
 }
  */
+class ThreadN extends Thread {
+	public void run() {
+
+		Foodistan fdistan = Foodistan.getfoodistan();
+		while(System.currentTimeMillis() <= Foodistan.getfoodistan().getFoodistanEndTime()){ 
+			for (int k=0;k<fdistan.getChefs().size();k++) {
+				Chef c = fdistan.chefs.get(k);
+
+				// decreasing speed
+				if(fdistan.getInv().items.size() > fdistan.getBurgerNeeded()){
+
+					long changeUpTime = c.getBackUpCookTime()*2;
+					if(changeUpTime <= 3600000){
+						fdistan.chefs.get(k).setBackUpCookTime(changeUpTime);
+					}
+					else {
+						
+							fdistan.chefs.get(k).setBackUpCookTime(fdistan.chefs.get(k).getDefaultCookTime());
+						}
+				    }
+
+				// increasing speed
+				if(fdistan.getInv().items.size() < fdistan.getBurgerNeeded()){
+					long changeDownTime = c.getBackUpCookTime()/2;
+
+					if(	changeDownTime > 1){
+
+						fdistan.chefs.get(k).setBackUpCookTime(changeDownTime);	
+					}
+
+
+				}
+
+			}
+		}
+	}
+}
+
+
+
+class ThreadK extends Thread {
+	public void run() {
+
+		Foodistan fdistan = Foodistan.getfoodistan();
+		while(System.currentTimeMillis() <= Foodistan.getfoodistan().getFoodistanEndTime()){ 
+
+			for (int k=0;k<fdistan.getChefs().size();k++) {
+				Chef c = fdistan.chefs.get(k);
+				if (c.getcStatus() == chefStatus.SPEEDUPDATE){
+
+					fdistan.chefs.get(k).setCurrentCookTime(fdistan.chefs.get(k).getBackUpCookTime()); 
+					fdistan.chefs.get(k).setcStatus(chefStatus.FREE);	
+
+				}	
+
+
+			}
+		}
+
+	}
+}
+
+
+
 
 //
-class ThreadN extends Thread {
+/*class ThreadN extends Thread {
 	public void run() {
 
 		Foodistan fdistan = Foodistan.getfoodistan();
@@ -593,19 +698,19 @@ class ThreadN extends Thread {
 							if(fdistan.getAvgDiscount()<40){
 							fdistan.chefs.get(k).setCurrentCookTime(fdistan.chefs.get(k).getDefaultCookTime());	
 							}
-						
+
 						}
 					}
 					// increasing speed
 					if(fdistan.getInv().items.size() < fdistan.getBurgerNeeded()){
 						long changeDownTime = c.getCurrentCookTime()/2;
-						
+
 						if(	changeDownTime > 1){
 
 							fdistan.chefs.get(k).setCurrentCookTime(changeDownTime);	
 						}
-					
-					
+
+
 					}
 					fdistan.chefs.get(k).setcStatus(chefStatus.FREE);
 				}
@@ -613,7 +718,7 @@ class ThreadN extends Thread {
 		}
 
 	}
-}
+}*/
 
 //Thread to remove stale burger
 class ThreadO extends Thread{
@@ -624,34 +729,34 @@ class ThreadO extends Thread{
 		while(System.currentTimeMillis() <= Foodistan.getfoodistan().getFoodistanEndTime()){
 			//System.out.println(fdistan.getInv().items.isEmpty());
 
-		    long waitTime = 180000L;
+			long waitTime = 180000L;
 			if(!fdistan.getInv().items.isEmpty()){
-				
+
 				if (System.currentTimeMillis() > (180000L + fdistan.getInv().items.peek().getItemStartTime())){
 					fdistan.getInv().items.poll();
 					fdistan.setBurgersWasted(fdistan.getBurgersWasted()+1);
 					fdistan.setAvgItemLifeTime(fdistan.getAvgItemLifeTime()+ItemType.BURGER.getLifeTime());
 				}
 				waitTime = (fdistan.getInv().items.peek().getItemStartTime()+180000L)- System.currentTimeMillis();
-				
+
 			}
 			System.out.println("Stale burgers it ");	
-				if(waitTime<0)
-					continue;
+			if(waitTime<0)
+				continue;
 			try{
-				       
-              			Thread.currentThread().sleep(waitTime);
+
+				Thread.currentThread().sleep(waitTime);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-			   
+
 			/*
 			while(!(fdistan.getInv().items.isEmpty())){
 			    System.out.println(fdistan.getInv().items.isEmpty());
 				System.out.println("System time update " + System.currentTimeMillis());
 				System.out.println("System time update " + fdistan.getInv().items.peek().getItemStartTime());
 				System.out.println("System time update " + (System.currentTimeMillis() - fdistan.getInv().items.peek().getItemStartTime()));
-															
+
 				//System.out.println("Outside it ");
 				if (System.currentTimeMillis() > (180000L + fdistan.getInv().items.peek().getItemStartTime())){
 					fdistan.getInv().items.poll();
