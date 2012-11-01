@@ -2,7 +2,6 @@ package minocha.foodistan.manager;
 
 import minocha.foodistan.inventory.Inventory;
 import minocha.foodistan.item.Item;
-
 import minocha.foodistan.order.Order;
 import minocha.foodistan.order.Order.orderStatus;
 
@@ -19,7 +18,7 @@ public class ManagerImpl implements Manager {
 		if ((this.hasInventory(Foodistan.getfoodistan().getInv(), order.getOrdrQuantity())==false) || (this.calculateDiscount() < order.getOrdrDiscount())){ 
 			Foodistan.getfoodistan().setBurgerNeeded(Foodistan.getfoodistan().getBurgerNeeded()+1);
 			order.setOrdrStatus(orderStatus.HOLD);
-			Foodistan.getfoodistan().getOdrsOnHold().add(order);
+			Foodistan.getfoodistan().odrsOnHold.add(order);
 			return null;
 		}
 		else{

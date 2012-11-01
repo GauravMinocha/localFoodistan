@@ -8,38 +8,53 @@ import minocha.foodistan.item.*;
 
 public class Inventory {
 
-	private Queue<Item> items = new LinkedList<Item>();
+   public Queue<Item> items = new LinkedList<Item>();
 
-	public int countItem()
-	{  
-		return this.items.size();
-	}
-
-	public void addItem(Item item)
-	{
-		this.items.add(item);
-	}
-
-	public Item removeItem()
-	{
-		try{
-			if(!this.items.isEmpty()) {
-				Item item = this.items.poll();
-				return item;
-			}
-			else
-				return null;
-		}catch(NoSuchElementException e){ 
-			return null;
-		}
-	}
-
-	//getter & setters 
-	public Queue<Item> getItems() {
-		return items;
-	}
-
-	public void setItems(Queue<Item> items) {
-		this.items = items;
-	}
+/*   private boolean removeStale() {
+	// TODO Auto-generated method stub
+		 Foodistan fdistan = Foodistan.getfoodistan(); 
+		 boolean b = false;
+         if(!this.items.isEmpty()){
+        	 Item itm = this.items.peek();
+        	 if(itm!=null){
+		  while(!itm.isUsable()){
+			  this.items.poll();
+			  itm.setItmStatus(itemStatus.STALE);
+			  fdistan.setBurgersWasted(fdistan.getBurgersWasted()+1);
+			  itm = this.items.peek();
+		      b = true;
+		  }
+        	 }
+         }
+			  return b;
+   }*/
+   public int countItem()
+   {  
+	   	//removeStale();
+	   	return this.items.size();
+    }
+   
+	public void addItem(Item itm)
+   {
+		//removeStale();	  
+		this.items.add(itm);
+   }
+   
+   public Item removeItem()
+   {
+	   //removeStale();
+      try{
+	   if(!this.items.isEmpty()) {
+	   Item itm = this.items.poll();
+	   return itm;
+	   
+	   }
+       else
+    	   return null;
+      }catch(NoSuchElementException e){
+    	  
+    	  return null;
+      }
+   }
+ 
 }

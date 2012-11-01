@@ -1,13 +1,19 @@
 package minocha.foodistan.foodie;
-import minocha.foodistan.item.Item;
-import minocha.foodistan.item.Item.ItemType;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import minocha.foodistan.item.Item;
+import minocha.foodistan.item.ItemType;
+import minocha.foodistan.manager.Foodistan;
 import minocha.foodistan.salesCounter.SalesCounter;
 
 
 public class Foodie {
 
 	private int foodieDiscount;
+	public enum foodieStatus {HUNGRY, EATING, WAITING, DEAD} 
 	private foodieStatus fStatus;
 	private ItemType itmTyp;
 	private long eatTime;
@@ -15,7 +21,7 @@ public class Foodie {
 	private long waitStartTime;
 	private long maxWaitTime;
 
-	public enum foodieStatus {HUNGRY, EATING, WAITING, DEAD} 
+
 	public Foodie(int foodieDiscount, ItemType itmTyp, long eatTime) {
 		super();
 		this.setFoodieDiscount(foodieDiscount);
@@ -36,7 +42,7 @@ public class Foodie {
 		this.setEatStartTime(System.currentTimeMillis());
 	}
 
-	//getter & setters
+	
 	public long getMaxWaitTime() {
 		return maxWaitTime;
 	}
@@ -81,8 +87,8 @@ public class Foodie {
 		return itmTyp;
 	}
 
-	public void setItmTyp(ItemType itmType) {
-		this.itmTyp = itmType;
+	public void setItmTyp(ItemType itmTyp) {
+		this.itmTyp = itmTyp;
 	}
 
 	public long getWaitStartTime() {
