@@ -1,6 +1,10 @@
 package minocha.foodistan.chef;
 
-import minocha.foodistan.item.ItemType;
+import minocha.foodistan.item.Item.ItemType;
+
+
+
+
 
 /* Chef entity:
  * chefItemType: A chef is skilled to prepare a particular Item
@@ -17,22 +21,22 @@ public class Chef {
 
 	//private Map<ItemType, Long> chefItemTime = new HashMap<ItemType, Long>();
 	//private Map<ItemType, Long> chefItemDefaultTime = new HashMap<ItemType, Long>();
-
-	public enum chefStatus {FREE, BUSY, SPEEDUPDATE} 
-	private chefStatus cStatus;
-	private ItemType chefItemType;
+    
 	private long currentCookTime;
 	private long defaultCookTime;
 	private long cookStartTime;
 	private long backUpCookTime;
+	private chefStatus cStatus;
+	private ItemType chefItemType;
 
+	public enum chefStatus {FREE, BUSY, SPEEDUPDATE} 
 	public Chef(ItemType chefItemType, long defaultCookTime) {
 		super();
 		this.chefItemType = chefItemType;
 		this.defaultCookTime = defaultCookTime;
 		this.currentCookTime = defaultCookTime;
-		this.setcStatus(chefStatus.FREE);
 		this.backUpCookTime = defaultCookTime;
+		this.setcStatus(chefStatus.FREE);
 	}
 
 	/*
@@ -47,25 +51,19 @@ public class Chef {
 			this.cStatus = chefStatus.BUSY;
 			this.cookStartTime = System.currentTimeMillis();
 		}
-
 	}
-
 	public chefStatus getcStatus() {
 		return cStatus;
 	}
-
 	public void setcStatus(chefStatus cStatus) {
 		this.cStatus = cStatus;
 	}
-
 	public long getCookStartTime() {
 		return cookStartTime;
 	}
-
 	public void setCookStartTime(long cookStartTime) {
 		this.cookStartTime = cookStartTime;
 	}
-
 	public ItemType getChefItemType() {
 		return chefItemType;
 	}
@@ -84,14 +82,10 @@ public class Chef {
 	public void setDefaultCookTime(long defaultCookTime) {
 		this.defaultCookTime = defaultCookTime;
 	}
-
 	public long getBackUpCookTime() {
 		return backUpCookTime;
 	}
-
 	public void setBackUpCookTime(long backUpCookTime) {
 		this.backUpCookTime = backUpCookTime;
 	}
-
-
 }

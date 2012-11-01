@@ -20,8 +20,8 @@ public interface Manager {
 
 	public void refillInventory(Item item);
 
-	public boolean hasInventory(Inventory invtry, int quantity);
+	public boolean hasInventory(Inventory inventory, int quantity);
 	
-	public Item getItem(Inventory invtry);
+	public Item getItem(Inventory inventory);
 
 }

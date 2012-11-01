@@ -1,16 +1,6 @@
 package minocha.foodistan.order;
 
-import minocha.foodistan.item.ItemType;
-/*
- * Order Entity:
- * ordrItmTyp: Item type ordered
- * orderQuantity: Quantity of ordrItmTyp
- * orderDiscount: Discount expected by Foodie 
- * orderStatus: 
- * RELEASED: Order recorded 
- * HOLD: Order is on hold 
- * COMPLETE: Order is completed 
- */
+import minocha.foodistan.item.Item.ItemType;
 
 public class Order {
 
@@ -20,9 +10,9 @@ public class Order {
 	private ItemType ordrItmTyp;
 	private int ordrQuantity;
 	private int ordrDiscount;
-	public enum orderStatus {RELEASED, HOLD, COMPLETE};
 	private orderStatus ordrStatus;  
-
+    
+	public enum orderStatus {RELEASED, HOLD, COMPLETE}
 	public Order(ItemType ordrItmTyp, int ordrQuantity, int ordrDiscount) {
 		super();
 		this.ordrItmTyp = ordrItmTyp;
@@ -30,7 +20,7 @@ public class Order {
 		this.ordrDiscount = ordrDiscount;
 		this.setOrdrStatus(orderStatus.RELEASED);
 	}
-
+    // getter & setters
 	public ItemType getOrdrItmTyp() {
 		return ordrItmTyp;
 	}
