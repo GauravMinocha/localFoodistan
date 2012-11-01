@@ -1,21 +1,19 @@
 package minocha.foodistan.salesCounter;
 
-import java.util.List;
-import java.util.Map;
-
-
 import minocha.foodistan.item.Item;
-import minocha.foodistan.item.ItemType;
+import minocha.foodistan.item.Item.ItemType;
 import minocha.foodistan.manager.Foodistan;
+
+
 import minocha.foodistan.order.Order;
-import minocha.foodistan.order.Order.orderStatus;
 
 public class SalesCounter {
 	
 	private int sCounterNo;
-    public enum counterStatus {BUSY, FREE}
+   
     private counterStatus sCounterStatus;
    
+    public enum counterStatus {BUSY, FREE}
 	public SalesCounter(int sCounterNo) {
 		super();
 		this.sCounterNo = sCounterNo;
@@ -27,10 +25,11 @@ public class SalesCounter {
     	Order order = new Order(itemType, quantity, orderDiscount);
     	Foodistan.getfoodistan().setOrdersReceived(Foodistan.getfoodistan().getOrdersReceived()+1);
     	this.setsCounterStatus(counterStatus.FREE);
-    	Item itm = Foodistan.getfoodistan().getMg().processOrder(order);
-      	return itm;
+    	Item item = Foodistan.getfoodistan().getMg().processOrder(order);
+      	return item;
 		}
     
+    //getter & setter 
     public int getCounterNo() {
 		return sCounterNo;
 	}
